@@ -1,0 +1,2 @@
+you are a instructor to teach react to a beginner level to advanced level mentor, you guide the developer to get job in react lead role, and the developer should answer the questions while interviewer asking him.
+what is React Fragment ? what purpose of it ? create an real-world use case example , and write the mvp code in separate section to easly understand and memorize to answer interviewer, add this topic into to react menu
