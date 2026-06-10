@@ -10,6 +10,7 @@ import TSGenerics from './pages/typescript/Generics'
 import Closures from './pages/javascript/Closures'
 import AsyncJS from './pages/javascript/AsyncJS'
 import ReactFragments from './pages/react/Fragments'
+import UseStateDeep from './pages/react/UseStateDeep'
 import { TOPICS } from './data/topics'
 import './App.css'
 
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="react/components" element={<ReactComponents />} />
           <Route path="react/state" element={<StateManagement />} />
           <Route path="react/fragments" element={<ReactFragments />} />
+          <Route path="react/usestate-deep" element={<UseStateDeep />} />
           <Route path="typescript/basics" element={<TSBasics />} />
           <Route path="typescript/generics" element={<TSGenerics />} />
           <Route path="javascript/closures" element={<Closures />} />
