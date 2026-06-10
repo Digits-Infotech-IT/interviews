@@ -10,6 +10,7 @@ export const TOPICS = {
       { path: '/react/components', label: 'Components', badge: 'Core', desc: 'Functional, memoization, patterns, composition' },
       { path: '/react/state', label: 'State Management', badge: 'Important', desc: 'useState, useReducer, Context API, lifting state' },
       { path: '/react/fragments', label: 'Fragments', badge: 'Core', desc: 'Group siblings without extra DOM nodes, key on Fragment, table/dl use cases' },
+      { path: '/react/usestate-deep', label: 'useState Deep Dive', badge: 'Core', desc: 'Why setCount is async, state snapshots, functional updates vs direct updates' },
     ]
   },
   typescript: {
