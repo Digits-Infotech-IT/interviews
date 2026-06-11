@@ -214,6 +214,61 @@ function App() {
   return <pre>{JSON.stringify(data, null, 2)}</pre>;
 }`
 
+const CODE_USEREF_REALWORLD = `import { useRef, useState, useEffect } from 'react';
+
+// 1. DOM element ref — focus an input on mount
+function AutoFocusInput() {
+  const inputRef = useRef(null);       // stores a DOM element
+
+  useEffect(() => {
+    inputRef.current?.focus();         // access the real DOM node
+  }, []);
+
+  return <input ref={inputRef} placeholder="Focused on mount" />;
+}
+
+// 2. Timer ref — store interval ID so it can be cleared later
+function Stopwatch() {
+  const [time, setTime] = useState(0);
+  const intervalRef = useRef(null);    // stores the timer handle
+
+  const start = () => {
+    // setInterval() returns a timer ID — save it so stop() can cancel it
+    intervalRef.current = setInterval(() => setTime(t => t + 1), 1000);
+  };
+
+  const stop = () => {
+    // clearInterval() needs the same ID that setInterval() returned
+    clearInterval(intervalRef.current); // timer cancelled → time stops
+  };
+
+  return (
+    <div>
+      <p>{time}s</p>
+      <button onClick={start}>Start</button>
+      <button onClick={stop}>Stop</button>
+    </div>
+  );
+}
+
+// 3. Plain value ref — store a counter without triggering re-render
+function ClickTracker() {
+  const clickCount = useRef(0);        // any mutable value
+
+  const handleClick = () => {
+    clickCount.current += 1;           // updates silently — no re-render
+    console.log('Total clicks:', clickCount.current);
+  };
+
+  return <button onClick={handleClick}>Click me (check console)</button>;
+}
+
+// useRef can hold anything:
+// const inputRef    = useRef(null);   // DOM element
+// const intervalRef = useRef(null);   // timer id / handle
+// const countRef    = useRef(0);      // any plain value
+// const prevRef     = useRef();       // previous render value`
+
 const CODE_REALWORLD = `// Shopping cart with multiple hooks working together
 import { useState, useCallback, useMemo, useReducer } from 'react';
 
@@ -366,6 +421,25 @@ function RealWorldTab() {
         to build a performant shopping cart as a custom hook.
       </div>
       <CodeBlock code={CODE_REALWORLD} language="jsx" title="useCart — Shopping cart with useReducer" />
+      <div className="section" style={{ marginTop: 32 }}>
+        <div className="section-title">📌 useRef — Beyond DOM Elements</div>
+        <div className="callout callout-info">
+          <strong>Key insight:</strong> <code>useRef</code> is not only for input/DOM elements.
+          It can store <em>any</em> mutable value that should persist across re-renders
+          <em> without triggering a re-render</em> when it changes.
+        </div>
+        <div className="callout callout-warning">
+          <strong>How <code>clearInterval(intervalRef.current)</code> works:</strong>
+          <ul style={{ marginTop: 8, marginBottom: 0 }}>
+            <li><code>setInterval(...)</code> starts a repeating timer and returns a timer ID/handle</li>
+            <li><code>intervalRef.current = setInterval(...)</code> saves that ID into the ref</li>
+            <li><code>clearInterval(intervalRef.current)</code> uses the saved ID to cancel the timer</li>
+            <li>After it runs: the callback stops, time no longer increases, the timer is gone</li>
+          </ul>
+        </div>
+        <CodeBlock code={CODE_USEREF_REALWORLD} language="jsx" title="useRef — DOM ref · timer ref · plain value ref" />
+      </div>
+
       <div className="section" style={{ marginTop: 24 }}>
         <div className="section-title">🌐 Where you'll see this in production</div>
         <ul>
