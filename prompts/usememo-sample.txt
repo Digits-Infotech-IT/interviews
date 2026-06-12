@@ -1,0 +1,182 @@
+import React, { useState, useCallback, useMemo, memo } from 'react';
+
+// memo only prevents re-render if props are shallowly equal
+const ExpensiveList = memo(({ items, onRemove }) => {
+  console.log('ExpensiveList render');
+  return (
+    <ul>
+      {items.map(item => (
+        <li key={item.id}>
+          {item.name}
+          <button onClick={() => onRemove(item.id)}>Remove</button>
+        </li>
+      ))}
+    </ul>
+  );
+});
+
+function App() {
+  const [items, setItems] = useState([
+    { id: 1, name: 'Apple', price: 1.5 },
+    { id: 2, name: 'Banana', price: 0.5 },
+    { id: 3, name: 'Cherry', price: 3.0 },
+  ]);
+  const [filter, setFilter] = useState('');
+
+  const handleRemove = useCallback((id) => {
+    setItems(prev => prev.filter(item => item.id !== id));
+  }, []);
+
+  const filtered = useMemo(
+    () => items.filter(i => i.name.toLowerCase().includes(filter.toLowerCase())),
+    [items, filter]
+  );
+
+  const totalPrice = useMemo(
+    () => filtered.reduce((sum, i) => sum + i.price, 0).toFixed(2),
+    [filtered]
+  );
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h2>useCallback + useMemo Demo</h2>
+      <input
+        value={filter}
+        onChange={e => setFilter(e.target.value)}
+        placeholder="Search…"
+      />
+      <p>Total: ${totalPrice}</p>
+      <ExpensiveList items={filtered} onRemove={handleRemove} />
+    </div>
+  );
+}
+
+export default App;
+--------
+what is purpose of memo and useMemo ? where do we need to use it ?
+
+memo and useMemo are both for performance optimization, but they work in different places.
+
+1) memo
+memo is used for components.
+
+It prevents a component from re-rendering if its props did not change.
+
+Example
+const ExpensiveList = memo(({ items, onRemove }) => {
+  return <div>...</div>;
+});
+If parent re-renders but items and onRemove are the same, ExpensiveList can skip re-rendering.
+
+Use memo when:
+a child component is expensive to render
+the child gets the same props often
+you want to avoid unnecessary child re-renders
+2) useMemo
+useMemo is used for values/results.
+
+It caches the result of a calculation so React does not recompute it on every render unless dependencies change.
+
+Example
+const filtered = useMemo(
+  () => items.filter(i => i.name.includes(filter)),
+  [items, filter]
+);
+Here filtering runs only when items or filter changes.
+
+Use useMemo when:
+calculation is expensive
+you want to avoid recalculating the same value on every render
+you need a stable computed value to pass to memo children
+Simple difference
+memo → memoizes a component
+useMemo → memoizes a computed value
+In your code
+memo
+Used for ExpensiveList:
+
+avoids re-rendering the list when parent changes but list props stay same
+useMemo
+Used for:
+
+filtered
+totalPrice
+So the filter and total are not recomputed unnecessarily.
+
+When should you use them?
+Use them only when needed, for example:
+
+large lists
+expensive calculations
+components re-render too often
+Don’t use them everywhere, because they add complexity.
+
+---
+
+shopping cart Example 2 :
+import React, { useState, useCallback, useMemo, memo } from 'react';
+
+const ExpensiveList = memo(({ items, onRemove }) => {
+  console.log('ExpensiveList render');
+  return (
+    <ul>
+      {items.map(item => (
+        <li key={item.id}>
+          {item.name} - ${item.price}
+          <button onClick={() => onRemove(item.id)} style={{ marginLeft: 8 }}>
+            Remove
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+});
+
+function App() {
+  const [items, setItems] = useState([
+    { id: 1, name: 'Apple', price: 1.5 },
+    { id: 2, name: 'Banana', price: 0.5 },
+    { id: 3, name: 'Cherry', price: 3.0 },
+  ]);
+  const [filter, setFilter] = useState('');
+
+  const handleRemove = useCallback((id) => {
+    setItems(prev => prev.filter(item => item.id !== id));
+  }, []);
+
+  const filtered = useMemo(
+    () => items.filter(i => i.name.toLowerCase().includes(filter.toLowerCase())),
+    [items, filter]
+  );
+
+  const totalPrice = useMemo(
+    () => filtered.reduce((sum, i) => sum + i.price, 0).toFixed(2),
+    [filtered]
+  );
+
+  return (
+    <div style={{ padding: 20, fontFamily: 'sans-serif' }}>
+      <h2>memo vs useMemo</h2>
+
+      <p>
+        <strong>memo</strong> stops a child component from re-rendering if props stay the same.
+      </p>
+      <p>
+        <strong>useMemo</strong> caches a computed value until dependencies change.
+      </p>
+
+      <input
+        value={filter}
+        onChange={e => setFilter(e.target.value)}
+        placeholder="Search..."
+      />
+
+      <p>Filtered items: {filtered.length}</p>
+      <p>Total: ${totalPrice}</p>
+
+      <ExpensiveList items={filtered} onRemove={handleRemove} />
+    </div>
+  );
+}
+
+export default App;
