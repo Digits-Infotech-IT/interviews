@@ -11,6 +11,8 @@ export const TOPICS = {
       { path: '/react/state', label: 'State Management', badge: 'Important', desc: 'useState, useReducer, Context API, lifting state' },
       { path: '/react/fragments', label: 'Fragments', badge: 'Core', desc: 'Group siblings without extra DOM nodes, key on Fragment, table/dl use cases' },
       { path: '/react/usestate-deep', label: 'useState Deep Dive', badge: 'Core', desc: 'Why setCount is async, state snapshots, functional updates vs direct updates' },
+      { path: '/react/rendering-snapshot', label: 'Rendering & Snapshots', badge: 'Core', desc: 'How React freezes state per render, snapshot concept, direct vs functional updates' },
+      { path: '/react/passing-data', label: 'Passing Data', badge: 'Important', desc: 'Props, callbacks, lifting state, Context, custom hooks, Zustand, URL params, localStorage, refs, event bus' },
     ]
   },
   typescript: {

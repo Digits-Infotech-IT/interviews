@@ -11,6 +11,8 @@ import Closures from './pages/javascript/Closures'
 import AsyncJS from './pages/javascript/AsyncJS'
 import ReactFragments from './pages/react/Fragments'
 import UseStateDeep from './pages/react/UseStateDeep'
+import RenderingSnapshot from './pages/react/RenderingSnapshot'
+import PassingData from './pages/react/PassingData'
 import { TOPICS } from './data/topics'
 import './App.css'
 
@@ -43,6 +45,8 @@ export default function App() {
           <Route path="react/state" element={<StateManagement />} />
           <Route path="react/fragments" element={<ReactFragments />} />
           <Route path="react/usestate-deep" element={<UseStateDeep />} />
+          <Route path="react/rendering-snapshot" element={<RenderingSnapshot />} />
+          <Route path="react/passing-data" element={<PassingData />} />
           <Route path="typescript/basics" element={<TSBasics />} />
           <Route path="typescript/generics" element={<TSGenerics />} />
           <Route path="javascript/closures" element={<Closures />} />

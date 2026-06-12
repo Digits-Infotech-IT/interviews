@@ -1,0 +1,75 @@
+import React, { useRef, useEffect, useState } from 'react';
+
+// DOM access
+function AutoFocusInput() {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  return <input ref={inputRef} placeholder="Auto-focused on mount" />;
+}
+
+// Mutable value that does NOT trigger re-render
+function Stopwatch() {
+  const [time, setTime] = useState(0);
+  const intervalRef = useRef(null);
+
+  const start = () => { 
+    intervalRef.current = setInterval(() => setTime(t => t + 1), 1000);   
+  };
+
+  const stop = () => {
+    clearInterval(intervalRef.current);
+  };
+
+  return (
+    <div>
+      <p>{time}s</p>
+      <button onClick={start}>Start</button>
+      <button onClick={stop}>Stop</button>
+    </div>
+  );
+}
+
+// Store previous value pattern
+function usePrevious(value) {
+  console.log(`previous function : ${value}`)
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+    console.log(`In us value : ${value}`)
+  });
+  console.log(`In ref.curren value : ${ref.curren}`)
+  return ref.current;
+}
+
+function App() {
+  const [count, setCount] = useState(0);
+  const previousCount = usePrevious(count);
+
+  console.log(`PreviousCount : ${previousCount}`)
+  useEffect(()=>{
+     console.log(`useEffect PreviousCount : ${previousCount}`)
+  })
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h2>useRef Demo</h2>
+
+      <h3>Auto Focus Input</h3>
+      <AutoFocusInput />
+
+      <h3>Stopwatch</h3>
+      <Stopwatch />
+
+      <h3>Previous Value</h3>
+      <p>Current: {count}</p>
+      <p>Previous: {previousCount}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+}
+
+export default App;
